@@ -1,0 +1,154 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// USUÁRIOS DO SISTEMA (autenticados via AD)
+// ==========================================
+// role: "ADMIN" | "EVALUATOR"
+
+model User {
+  id           Int       @id @default(autoincrement())
+  adUsername   String    @unique @db.NVarChar(100)
+  email        String    @unique @db.NVarChar(255)
+  name         String    @db.NVarChar(200)
+  role         String    @default("EVALUATOR") @db.NVarChar(20)
+  isActive     Boolean   @default(true)
+  lastLogin    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  evaluations  Evaluation[]
+  auditLogs    AuditLog[]
+
+  @@map("users")
+}
+
+// ==========================================
+// FILIAIS
+// ==========================================
+
+model Branch {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.NVarChar(200)
+  code      String     @unique @db.NVarChar(50)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  employees Employee[]
+
+  @@map("branches")
+}
+
+// ==========================================
+// COLABORADORES (que serão avaliados)
+// ==========================================
+// type: "GESTORES" | "OPERACIONAIS"
+
+model Employee {
+  id           Int       @id @default(autoincrement())
+  name         String    @db.NVarChar(200)
+  email        String?   @db.NVarChar(255)
+  position     String    @db.NVarChar(200)
+  department   String    @db.NVarChar(200)
+  type         String    @db.NVarChar(20)
+  managerId    Int?
+  branchId     Int?
+  branch       Branch?   @relation(fields: [branchId], references: [id])
+  seniorId     String?   @db.NVarChar(50)
+  avaliador01  String?   @db.NVarChar(100)
+  avaliador02  String?   @db.NVarChar(100)
+  avaliador03  String?   @db.NVarChar(100)
+  avaliador04  String?   @db.NVarChar(100)
+  avaliador05  String?   @db.NVarChar(100)
+  avaliador06  String?   @db.NVarChar(100)
+  avaliador07  String?   @db.NVarChar(100)
+  avaliador08  String?   @db.NVarChar(100)
+  isActive     Boolean   @default(true)
+  hireDate     DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  evaluations  Evaluation[]
+
+  @@map("employees")
+  @@index([type])
+  @@index([isActive])
+  @@index([branchId])
+}
+
+// ==========================================
+// AVALIAÇÕES
+// ==========================================
+// type: "GESTORES" | "OPERACIONAIS"
+// decision: "MANTER" | "DESLIGAR" | "EM_EVOLUCAO"
+
+model Evaluation {
+  id                 Int       @id @default(autoincrement())
+  employeeId         Int
+  employee           Employee  @relation(fields: [employeeId], references: [id])
+  evaluatorId        Int
+  evaluator          User      @relation(fields: [evaluatorId], references: [id])
+  type               String    @db.NVarChar(20)
+  average            Float
+  decision           String    @db.NVarChar(20)
+  justification      String    @db.NVarChar(Max)
+  pointsImprovement  String?   @db.NVarChar(Max)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  ratings            EvaluationRating[]
+
+  @@map("evaluations")
+  @@index([employeeId])
+  @@index([evaluatorId])
+  @@index([createdAt])
+  @@index([decision])
+}
+
+// ==========================================
+// NOTAS DE CADA CRITÉRIO
+// ==========================================
+
+model EvaluationRating {
+  id             Int        @id @default(autoincrement())
+  evaluationId   Int
+  evaluation     Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  criterionId    String     @db.NVarChar(50)
+  criterionName  String     @db.NVarChar(200)
+  category       String     @db.NVarChar(200)
+  weight         Float
+  rating         Float
+  createdAt      DateTime   @default(now())
+
+  @@map("evaluation_ratings")
+  @@index([evaluationId])
+}
+
+// ==========================================
+// AUDITORIA
+// ==========================================
+
+model AuditLog {
+  id          Int       @id @default(autoincrement())
+  userId      Int?
+  user        User?     @relation(fields: [userId], references: [id])
+  action      String    @db.NVarChar(100)
+  entityType  String    @db.NVarChar(100)
+  entityId    String    @db.NVarChar(20)
+  changes     String?   @db.NVarChar(Max)
+  ipAddress   String?   @db.NVarChar(45)
+  userAgent   String?   @db.NVarChar(500)
+  createdAt   DateTime  @default(now())
+
+  @@map("audit_logs")
+  @@index([userId])
+  @@index([createdAt])
+  @@index([entityType])
+}
