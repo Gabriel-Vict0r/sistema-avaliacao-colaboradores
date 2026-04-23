@@ -16,6 +16,8 @@ import statsRoutes from './routes/stats.routes';
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 // ── Segurança ──────────────────────────────────────────────
 app.use(helmet());
 
