@@ -146,7 +146,7 @@ export class EmployeesService {
 
   async create(data: CreateEmployeeInput) {
     if (data.email) {
-      const existing = await prisma.employee.findUnique({ where: { email: data.email } });
+      const existing = await prisma.employee.findFirst({ where: { email: data.email } });
       if (existing) {
         throw Object.assign(new Error('Já existe um colaborador com esse email'), {
           statusCode: 409,
