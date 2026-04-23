@@ -11,6 +11,7 @@ RUN npm run build
 # Stage 2: runtime
 FROM node:20-alpine AS runner
 WORKDIR /app
+RUN apk add --no-cache openssl
 COPY package*.json ./
 COPY prisma ./prisma/
 RUN npm ci --omit=dev && npx prisma generate
