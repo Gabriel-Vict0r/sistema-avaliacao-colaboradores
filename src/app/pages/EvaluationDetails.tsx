@@ -48,7 +48,7 @@ const decisionLabel = (decision: string) => {
   const map: Record<string, string> = {
     MANTER: "Manter",
     DESLIGAR: "Desligar",
-    EM_EVOLUCAO: "Em evolução",
+    EM_EVOLUCAO: "Em análise",
   };
   return map[decision] ?? decision;
 };

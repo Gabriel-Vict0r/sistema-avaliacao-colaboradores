@@ -113,7 +113,7 @@ export function Management() {
     if (decision === "manter")
       return <Badge variant="outline" className="text-green-700 border-green-700">Manter</Badge>;
     if (decision === "em_avaliacao")
-      return <Badge variant="outline" className="text-blue-700 border-blue-700">Em evolução</Badge>;
+      return <Badge variant="outline" className="text-blue-700 border-blue-700">Em análise</Badge>;
     return <Badge variant="outline" className="text-red-700 border-red-700">Desligar</Badge>;
   };
 

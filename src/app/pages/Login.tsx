@@ -28,6 +28,12 @@ export function Login() {
     try {
       setIsLoading(true);
       const loggedUser = await login(username, password);
+
+      if (type === "admin" && loggedUser.role !== "ADMIN") {
+        toast.error("Acesso negado. Seu usuário não tem permissão de administrador.");
+        return;
+      }
+
       toast.success("Login realizado com sucesso!");
       const destination =
         type === "admin"

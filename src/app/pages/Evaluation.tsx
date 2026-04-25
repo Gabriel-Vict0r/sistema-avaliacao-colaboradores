@@ -232,7 +232,7 @@ export function Evaluation() {
                       <SelectItem value="em_avaliacao">
                         <div className="flex items-center gap-2">
                           <span className="w-4 h-4 flex items-center justify-center text-blue-600">⏳</span>
-                          <span>Em evolução</span>
+                          <span>Em análise</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="desligar">
