@@ -32,7 +32,9 @@ import {
   DialogFooter,
 } from "../components/ui/dialog";
 import { useApp } from "../context/AppContext";
+import { Employee } from "../context/AppContext";
 import { AddEmployeeDialog } from "../components/AddEmployeeDialog";
+import { EditEmployeeDialog } from "../components/EditEmployeeDialog";
 import { branchService, Branch } from "../services/branch.service";
 import { toast } from "sonner";
 import { extractApiErrorMessage } from "../lib/error-handler";
@@ -45,6 +47,8 @@ export function Management() {
   const [filterDepartment, setFilterDepartment] = useState("all");
   const [filterType, setFilterType] = useState("all");
   const [filterPendingBranch, setFilterPendingBranch] = useState("all");
+
+  const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
   // Branch management state
   const [branchDialogOpen, setBranchDialogOpen] = useState(false);
@@ -366,6 +370,14 @@ export function Management() {
                               </div>
                             </div>
                           </div>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setEditingEmployee(employee)}
+                          >
+                            <Pencil className="w-4 h-4 mr-1" />
+                            Editar
+                          </Button>
                         </div>
                       </CardContent>
                     </Card>
@@ -564,6 +576,14 @@ export function Management() {
           </Tabs>
         </div>
       </div>
+
+      {editingEmployee && (
+        <EditEmployeeDialog
+          employee={editingEmployee}
+          open={!!editingEmployee}
+          onOpenChange={(open) => { if (!open) setEditingEmployee(null); }}
+        />
+      )}
 
       {/* Branch Dialog */}
       <Dialog open={branchDialogOpen} onOpenChange={setBranchDialogOpen}>

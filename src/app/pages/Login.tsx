@@ -56,7 +56,7 @@ export function Login() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Sistema de Avaliação
           </h1>
-          <p className="text-gray-600">Método 180 graus</p>
+          <p className="text-gray-600">Sistema de Avaliação de Colaboradores</p>
         </div>
 
         <Card>

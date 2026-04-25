@@ -49,7 +49,7 @@ export function Layout({ children, showSidebar = false }: LayoutProps) {
               <Users className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="font-bold text-gray-900">Avaliação 180°</h1>
+              <h1 className="font-bold text-gray-900">Sistema de Avaliação</h1>
               <p className="text-xs text-gray-600">Sistema de Gestão</p>
             </div>
           </div>
