@@ -145,7 +145,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const refreshEmployees = async () => {
     try {
-      const response = await employeeService.getAll({ limit: 500 });
+      const response = await employeeService.getAll({ limit: 9999 });
       setEmployees((response.employees || []).map(mapEmployee));
     } catch (error) {
       console.error("Erro ao carregar colaboradores:", error);
@@ -155,7 +155,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const refreshEvaluations = async () => {
     try {
-      const response = await evaluationService.getAll({ limit: 500 });
+      const response = await evaluationService.getAll({ limit: 9999 });
       setEvaluations((response.evaluations || []).map(mapEvaluation));
     } catch (error) {
       console.error("Erro ao carregar avaliações:", error);
