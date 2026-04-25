@@ -222,7 +222,6 @@ export function EvaluationDetails() {
                             <div className="flex items-center justify-between mb-2">
                               <div>
                                 <p className="font-medium text-gray-900">{r.criterionName}</p>
-                                <p className="text-xs text-gray-500">Peso: {r.weight}%</p>
                               </div>
                               <Badge className={color}>{label}</Badge>
                             </div>
