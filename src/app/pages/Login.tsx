@@ -95,11 +95,9 @@ export function Login() {
             </form>
 
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <p className="text-xs text-gray-600 mb-2">Credenciais de teste:</p>
-              <div className="space-y-1 text-xs">
-                <p><strong>Admin:</strong> admin / admin123</p>
-                <p><strong>Gestor:</strong> gestor / gestor123</p>
-              </div>
+              <p className="text-xs text-gray-600">
+                Informe seu usuário e senha (o mesmo que é utilizado ao ligar seu computador)
+              </p>
             </div>
           </CardContent>
         </Card>
