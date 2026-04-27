@@ -6,3 +6,7 @@ backend
 !.env.example
 *.log
 .git
+*.pem
+*.crt
+*.key
+*.cert
