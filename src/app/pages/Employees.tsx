@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, startTransition } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Search, ArrowLeft, User } from "lucide-react";
 import { Button } from "../components/ui/button";
@@ -155,7 +155,9 @@ export function Employees() {
                       </div>
                       <Button
                         onClick={() =>
-                          navigate(`/dashboard/evaluation/${type}/${employee.id}`)
+                          startTransition(() =>
+                            navigate(`/dashboard/evaluation/${type}/${employee.id}`)
+                          )
                         }
                         disabled={evaluated}
                       >
