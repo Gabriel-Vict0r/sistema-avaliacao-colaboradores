@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { ClipboardList, Users, LogOut, LayoutDashboard } from "lucide-react";
+import { ClipboardList, Users, LogOut, LayoutDashboard, BarChart2 } from "lucide-react";
 import { Button } from "./ui/button";
 import { cn } from "./ui/utils";
 import { useAuth } from "../context/AuthContext";
@@ -26,6 +26,12 @@ export function Layout({ children, showSidebar = false }: LayoutProps) {
       icon: LayoutDashboard,
       label: "Gerenciamento",
       path: "/dashboard/management",
+      roles: ["ADMIN"],
+    },
+    {
+      icon: BarChart2,
+      label: "Analytics",
+      path: "/dashboard/analytics",
       roles: ["ADMIN"],
     },
   ].filter((item) => !user || item.roles.includes(user.role));

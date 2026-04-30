@@ -3,6 +3,7 @@ import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import { Management } from "./pages/Management";
+import { Analytics } from "./pages/Analytics";
 import { Employees } from "./pages/Employees";
 import { Evaluation } from "./pages/Evaluation";
 import { EvaluationDetails } from "./pages/EvaluationDetails";
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
   {
     path: "/dashboard/management",
     Component: Management,
+  },
+  {
+    path: "/dashboard/analytics",
+    Component: Analytics,
   },
   {
     path: "/dashboard/employees/:type",
