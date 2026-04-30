@@ -47,6 +47,9 @@ export function Management() {
   const [filterDepartment, setFilterDepartment] = useState("all");
   const [filterType, setFilterType] = useState("all");
   const [filterPendingBranch, setFilterPendingBranch] = useState("all");
+  const [filterDecision, setFilterDecision] = useState("all");
+  const [filterBranch, setFilterBranch] = useState("all");
+  const [filterClassification, setFilterClassification] = useState("all");
 
   const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
 
@@ -64,16 +67,29 @@ export function Management() {
 
   const departments = Array.from(new Set(employees.map((emp) => emp.department)));
 
+  const getClassificationKey = (average: number) => {
+    if (average <= 5.0) return "ruim";
+    if (average < 8.0) return "regular";
+    if (average < 9.0) return "bom";
+    return "excelente";
+  };
+
   const filteredEvaluations = evaluations.filter((evaluation) => {
+    const employee = employees.find((emp) => emp.id === evaluation.employeeId);
     const matchesSearch = evaluation.employeeName
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesType = filterType === "all" || evaluation.type === filterType;
     const matchesDepartment =
-      filterDepartment === "all" ||
-      employees.find((emp) => emp.id === evaluation.employeeId)?.department ===
-        filterDepartment;
-    return matchesSearch && matchesType && matchesDepartment;
+      filterDepartment === "all" || employee?.department === filterDepartment;
+    const matchesDecision =
+      filterDecision === "all" || evaluation.decision === filterDecision;
+    const matchesBranch =
+      filterBranch === "all" || employee?.branchId === filterBranch;
+    const matchesClassification =
+      filterClassification === "all" ||
+      getClassificationKey(evaluation.average) === filterClassification;
+    return matchesSearch && matchesType && matchesDepartment && matchesDecision && matchesBranch && matchesClassification;
   });
 
   const filteredEmployees = employees.filter((employee) => {
@@ -196,35 +212,75 @@ export function Management() {
             <TabsContent value="completed" className="space-y-4">
               <Card>
                 <CardContent className="pt-6">
-                  <div className="flex flex-col md:flex-row gap-4 mb-6">
-                    <div className="flex-1">
-                      <Input
-                        placeholder="Buscar por nome..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                      />
+                  <div className="flex flex-col gap-3 mb-6">
+                    <div className="flex flex-col md:flex-row gap-3">
+                      <div className="flex-1">
+                        <Input
+                          placeholder="Buscar por nome..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
+                      <Select value={filterType} onValueChange={setFilterType}>
+                        <SelectTrigger className="w-full md:w-44">
+                          <SelectValue placeholder="Tipo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todos os tipos</SelectItem>
+                          <SelectItem value="gestores">Gestores</SelectItem>
+                          <SelectItem value="operacionais">Operacionais</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Select value={filterDepartment} onValueChange={setFilterDepartment}>
+                        <SelectTrigger className="w-full md:w-44">
+                          <SelectValue placeholder="Setor" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todos os setores</SelectItem>
+                          {departments.map((dept) => (
+                            <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
-                    <Select value={filterType} onValueChange={setFilterType}>
-                      <SelectTrigger className="w-full md:w-48">
-                        <SelectValue placeholder="Tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos os tipos</SelectItem>
-                        <SelectItem value="gestores">Gestores</SelectItem>
-                        <SelectItem value="operacionais">Operacionais</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <Select value={filterDepartment} onValueChange={setFilterDepartment}>
-                      <SelectTrigger className="w-full md:w-48">
-                        <SelectValue placeholder="Setor" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Todos os setores</SelectItem>
-                        {departments.map((dept) => (
-                          <SelectItem key={dept} value={dept}>{dept}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <div className="flex flex-col md:flex-row gap-3">
+                      <Select value={filterDecision} onValueChange={setFilterDecision}>
+                        <SelectTrigger className="w-full md:w-44">
+                          <SelectValue placeholder="Decisão" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todas as decisões</SelectItem>
+                          <SelectItem value="manter">Manter</SelectItem>
+                          <SelectItem value="em_avaliacao">Em análise</SelectItem>
+                          <SelectItem value="desligar">Desligar</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <Select value={filterBranch} onValueChange={setFilterBranch}>
+                        <SelectTrigger className="w-full md:w-44">
+                          <SelectValue placeholder="Filial" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todas as filiais</SelectItem>
+                          {branches.filter((b) => b.isActive).map((branch) => (
+                            <SelectItem key={branch.id} value={String(branch.id)}>
+                              {branch.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Select value={filterClassification} onValueChange={setFilterClassification}>
+                        <SelectTrigger className="w-full md:w-44">
+                          <SelectValue placeholder="Classificação" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Todas as classificações</SelectItem>
+                          <SelectItem value="excelente">Excelente</SelectItem>
+                          <SelectItem value="bom">Bom</SelectItem>
+                          <SelectItem value="regular">Regular</SelectItem>
+                          <SelectItem value="ruim">Ruim</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </div>
 
                   {filteredEvaluations.length === 0 ? (
